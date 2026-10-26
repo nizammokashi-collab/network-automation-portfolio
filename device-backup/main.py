@@ -1,3 +1,4 @@
+
 import logging
 
 from backup_folder_func import create_backup_folder
@@ -15,37 +16,40 @@ logging.basicConfig(
     ],
 )
 
-# Read inventory file
+# Read inventory and backup configuration.
 devices = load_inventory()
-
-# Create dynamic backup folder
 backup_folder = create_backup_folder()
-
-#Get commands
 commands = get_commands()
 
-# Backup counters
+# Track backup results.
 total_devices = len(devices)
 success_count = 0
 failed_count = 0
 failed_devices = []
-#............
 
-#Backup devices
+# Back up each device.
 for device_name, device in devices.items():
-    success, error = backup_device(device_name, device, backup_folder, commands)
+    success, error = backup_device(
+        device_name,
+        device,
+        backup_folder,
+        commands,
+    )
 
     if success:
         success_count += 1
     else:
         failed_count += 1
+        failed_devices.append({
+            "device": device_name,
+            "error": error,
+        })
 
-        failed_devices.append(
-            {
-                "device": device_name,
-                "error": error,
-            }
-        )
-
-# Display summary
-print_summary(total_devices = total_devices, success_count = success_count, failed_count = failed_count, failed_devices = failed_devices)
+# Print and save the summary.
+print_summary(
+    total_devices=total_devices,
+    success_count=success_count,
+    failed_count=failed_count,
+    failed_devices=failed_devices,
+    report_path=backup_folder / "backup_summary.json",
+)
