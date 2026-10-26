@@ -1,9 +1,11 @@
 
 from netmiko import ConnectHandler
+import logging
 
+logger = logging.getLogger(__name__)
 
 def backup_device(device_name, device, backup_folder, commands):
-    print(f"Connecting to {device_name}...")
+    logger.info("Connecting to %s...", device_name)
 
     connection = None
 
@@ -22,11 +24,11 @@ def backup_device(device_name, device, backup_folder, commands):
             with open(file_path, "w", encoding="utf-8") as file:
                 file.write(output)
 
-        print(f"Backup completed for {device_name}")
+        logger.info("Backup completed for %s", device_name)
         return True, None
 
     except Exception as error:
-        print(f"Backup failed for {device_name}: {error}")
+        logger.exception("Backup failed for %s", device_name)
         return False, str(error)
 
     finally:
@@ -34,4 +36,4 @@ def backup_device(device_name, device, backup_folder, commands):
             try:
                 connection.disconnect()
             except Exception as error:
-                print(f"Warning: disconnect failed for {device_name}: {error}")
+                logger.warning("Disconnect failed for %s: %s", device_name, error)

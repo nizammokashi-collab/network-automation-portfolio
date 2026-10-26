@@ -1,9 +1,19 @@
+import logging
 
 from backup_folder_func import create_backup_folder
 from inventory_func import load_inventory
 from command_func import get_commands
 from backup_device_func import backup_device
 from summary_func import print_summary
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("device_backup.log", encoding="utf-8"),
+    ],
+)
 
 # Read inventory file
 devices = load_inventory()
