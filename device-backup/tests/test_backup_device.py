@@ -52,21 +52,27 @@ class TestBackupDevice(unittest.TestCase):
         )
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            success, error = backup_device(
-                "SW1",
-                {
-                    "device_type": "cisco_ios",
-                    "host": "192.0.2.10",
-                    "username": "test_user",
-                    "password": "test_password",
-                },
-                Path(temp_dir),
-                ["show version"],
-            )
+            with self.assertLogs(
+                "backup_device_func", level="ERROR"
+            ) as captured_logs:
+                success, error = backup_device(
+                    "SW1",
+                    {
+                        "device_type": "cisco_ios",
+                        "host": "192.0.2.10",
+                        "username": "test_user",
+                        "password": "test_password",
+                    },
+                    Path(temp_dir),
+                    ["show version"],
+                )
 
         self.assertFalse(success)
         self.assertEqual(error, "Simulated connection failure")
-
+        self.assertTrue(
+            any("Backup failed for SW1" in message
+                for message in captured_logs.output)
+        )
 
     @patch("backup_device_func.ConnectHandler")
     def test_backup_command_failure(self, mock_connect):
@@ -78,20 +84,27 @@ class TestBackupDevice(unittest.TestCase):
         )
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            success, error = backup_device(
-                "SW1",
-                {
-                    "device_type": "cisco_ios",
-                    "host": "192.0.2.10",
-                    "username": "test_user",
-                    "password": "test_password",
-                },
-                Path(temp_dir),
-                ["show version"],
-            )
+            with self.assertLogs(
+                "backup_device_func", level="ERROR"
+            ) as captured_logs:
+                success, error = backup_device(
+                    "SW1",
+                    {
+                        "device_type": "cisco_ios",
+                        "host": "192.0.2.10",
+                        "username": "test_user",
+                        "password": "test_password",
+                    },
+                    Path(temp_dir),
+                    ["show version"],
+                )
 
         self.assertFalse(success)
         self.assertEqual(error, "Simulated command failure")
+        self.assertTrue(
+            any("Backup failed for SW1" in message
+                for message in captured_logs.output)
+        )
         mock_connection.disconnect.assert_called_once()
 
 
