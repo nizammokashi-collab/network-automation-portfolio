@@ -8,6 +8,6 @@ def load_inventory():
     inventory_path = Path(__file__).resolve().parent / "Labs" / "devices.yaml"
 
     with open(inventory_path, "r", encoding="utf-8") as file:
-        devices = yaml.safe_load(file)
+        inventory = yaml.safe_load(file)
 
-    return devices
+    return inventory["devices"]
