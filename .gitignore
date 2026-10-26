@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.log
+device_health_report.json
+network_report.json
+remediation_report.json
+unreachable_devices.json
+backups/
+Backup/
+
+# Local network device inventory - never publish
+device-backup/Labs/devices.yaml

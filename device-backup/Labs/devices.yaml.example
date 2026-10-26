@@ -1,0 +1,6 @@
+devices:
+  SW1:
+    device_type: cisco_ios
+    host: 192.0.2.10
+    username: YOUR_USERNAME
+    password: YOUR_PASSWORD
